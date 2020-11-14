@@ -1,0 +1,7 @@
+,model,best_score (F1-score weighted),best_params
+0,GNB,0.6795338797158107,{}
+1,Base-DT,0.7872769778133213,{}
+2,Best-DT,0.7704561693457729,"{'class_weight': 'balanced', 'criterion': 'entropy', 'max_depth': None, 'min_impurity_decrease': 0.0, 'min_samples_split': 4}"
+3,PER,0.8319905955180757,{}
+4,Base-MLP,0.8293870982542165,{}
+5,Best-MLP,0.880246641748351,"{'activation': 'tanh', 'hidden_layer_sizes': (30, 50), 'solver': 'sgd'}"
