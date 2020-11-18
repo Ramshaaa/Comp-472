@@ -70,7 +70,6 @@ def Best_Model(info, train, val, test_no_label, test_with_label, suffix):
     X_valid, y_valid = unbox(val)
     X_dev = concatenate((X_train, X_valid), axis=0)
     y_dev = concatenate((y_train, y_valid), axis=0)
-    X_test, y_test = unbox(test_with_label)
 
     model_params = {
         'GNB': {

@@ -9,6 +9,7 @@ class Puzzle:
         self.height = height
         self.width = width
         self.cost = 0
+        self.moves = ['up', 'down', 'left', 'right', 'diagLeft', 'diagRight']
         self.moveList = [0]
         self.CostList = [0]
         self.stateList = [copy.deepcopy(puzzle)]
@@ -96,21 +97,21 @@ class Puzzle:
         w = self.width
         h = self.height
 
-        top_l = 0
-        bottom_l = w * (h - 1)
-        top_r = w - 1
-        bottom_r = (w * h) - 1
+        top_r = w - 1           #3
+        bottom_r = (w * h) - 1  #7
+        top_l = 0               #0
+        bottom_l = w * (h - 1)  #4
 
         self.cost += 3
 
         if pos == top_r:
-            return self.__swap(pos, pos + w - 1)  # DownLeft
+            return self.__swap(pos, pos + w - 1)  #6
         elif pos == bottom_r:
-            return self.__swap(pos, pos - w - 1)  # UpLeft
+            return self.__swap(pos, pos - w - 1)  #2
         if pos == top_l:
-            return self.__swap(pos, bottom_r)  # wrap top left corner
+            return self.__swap(pos, bottom_r)  #7
         elif pos == bottom_l:
-            return self.__swap(pos, top_r)  # wrap bottom left corner
+            return self.__swap(pos, top_r)  #3
 
     # moves the 0 diag right if 0 is in one of the corners and adds 3 to cost
     def rightDiagMove(self):
@@ -118,21 +119,21 @@ class Puzzle:
         w = self.width
         h = self.height
 
-        top_l = 0
-        bottom_l = w * (h - 1)
-        top_r = w - 1
-        bottom_r = (w * h) - 1
+        top_l = 0               #0
+        bottom_l = w * (h - 1)  #4
+        top_r = w - 1           #3
+        bottom_r = (w * h) - 1  #7
 
         self.cost += 3
 
         if pos == top_l:
-            return self.__swap(pos, pos + w + 1)  # DownRight
+            return self.__swap(pos, pos + w + 1)  #5
         elif pos == bottom_l:
-            return self.__swap(pos, pos - w + 1)  # UpRight
+            return self.__swap(pos, pos - w + 1)  #1
         elif pos == top_r:
-            return self.__swap(pos, bottom_l)  # wrap top right corner
+            return self.__swap(pos, bottom_l)  #4
         elif pos == bottom_r:
-            return self.__swap(pos, top_l)  # wrap bottom right corner
+            return self.__swap(pos, top_l)  #0
 
     def getSolution(self):
         sol = []
