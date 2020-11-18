@@ -1,5 +1,6 @@
 import numpy as np
 from puzzle import Puzzle
+from heapq import heapify, heappop, heappush
 
 class Node:
     """
@@ -8,14 +9,21 @@ class Node:
         - position is current position of the Node in the maze
         - h is heuristic based estimated cost for current Node to end Node
     """
-    def __init__(self, parent = None, position = None):
+    def __init__(self, parent = None):
         self.parent = parent
-        self.position = position
+        #self.position = position
         self.h = 0
-        self.value = 0;
+        self.zero = [0,0] #coordinates of the elements in the puzzle
+        self.one = [0,0]
+        self.two = [0,0]
+        self.three = [0,0]
+        self.four = [0,0]
+        self.five = [0,0]
+        self.six = [0,0]
+        self.seven = [0,0]
 
-    def __eq__(self, other):
-        return self.position == other.position
+    #def __eq__(self, other):
+        #return self.position == other.position
 
 
 def return_path(current_node, puzzle):
@@ -45,7 +53,7 @@ def return_path(current_node, puzzle):
     return result
 
 
-def search(puzzle, start, end):
+def search(puzzle):
     """
         Returns a list of tuples as a path from the given start to the given end in the given puzzle
     """
@@ -57,30 +65,61 @@ def search(puzzle, start, end):
     #print("\nInitializing node values and coordinates for each element in the puzzle list")
 
     print("\nReshaping puzzle to perform search")
-    result_puzzle = Puzzle(puzzle, 2, 4)  # create object from Puzzle class
+    matrix = np.reshape(puzzle, (-1, 4))
+    #result_puzzle = Puzzle(puzzle, 2, 4)  # create object from Puzzle class
     print("Your puzzle will look like this: ")
-    result_puzzle.show()
+    #result_puzzle.show()
+    for row in matrix:
+        print(*row)
+
+    print("\nThe end goal should look like this: ")
+    end_goal = [[1,2,3,4], [5,6,7,0]]
+    end_goal_opt2 = [[1, 3, 5, 7], [2, 4, 6, 0]]
+    for row in end_goal:
+        print(*row)
+    print("\nOr this: ")
+    for row in end_goal_opt2:
+        print(*row)
 
     # find puzzle has got how many rows and columns
-    # no_rows, no_columns = np.shape(puzzle)
-    no_rows = result_puzzle.height
+    no_rows, no_columns = matrix.shape
     print("\nnumber of rows: ", no_rows)
-    no_columns = result_puzzle.width
     print("number of columns: ", no_columns, "\n")
 
-    #for row in enumerate(result_puzzle.getState()):
-        #for elem in row:
-            #print(elem)
 
-    for idx, value in np.ndenumerate(result_puzzle.getCurrent()):
-        print(idx, value)
-
-    # Create start and end node with initialized values for f, h and f  MIGHT WANNA LOCATE 0 IN THE PUZZLE HERE
-    start_node = Node(None, tuple(start))
+    # Create start and end node with initialized values
+    start_node = Node(None)
     start_node.h = 0
-    start_node.value = 0
+    for row_index, row in enumerate(matrix):
+            for col_index, col_value in enumerate(row):
+                print("Row Index:",row_index,"Column index:",col_index,"Value",col_value)
+                if col_value == 0:
+                    start_node.zero = [row_index, col_index]
+                elif col_value == 1:
+                    start_node.one = [row_index, col_index]
+                elif col_value == 2:
+                    start_node.two = [row_index, col_index]
+                elif col_value == 3:
+                    start_node.three = [row_index, col_index]
+                elif col_value == 4:
+                    start_node.four = [row_index, col_index]
+                elif col_value == 5:
+                    start_node.five = [row_index, col_index]
+                elif col_value == 6:
+                    start_node.six = [row_index, col_index]
+                elif col_value == 7:
+                    start_node.seven = [row_index, col_index]
 
-    end_node = Node(None, tuple(end))
+    print("\nCoordinate of 0 in the puzzle: ",start_node.zero)
+    print("Coordinate of 1 in the puzzle: ",start_node.one)
+    print("Coordinate of 2 in the puzzle: ",start_node.two)
+    print("Coordinate of 3 in the puzzle: ",start_node.three)
+    print("Coordinate of 4 in the puzzle: ",start_node.four)
+    print("Coordinate of 5 in the puzzle: ",start_node.five)
+    print("Coordinate of 6 in the puzzle: ",start_node.six)
+    print("Coordinate of 7 in the puzzle: ",start_node.seven)
+
+    end_node = Node(None)
     end_node.h = 0
 
 
@@ -92,7 +131,12 @@ def search(puzzle, start, end):
     closed_list = []
 
     # We add the start node to the open_list
-    open_list.append(start_node)
+    #open_list.append(start_node)
+    heappush(open_list, start_node)
+    print("\nElement of each node in the open list:")
+    for node in open_list:
+        print(node," ")
+
 
 
     # Stop condition to avoid infinite loops/stopping execution after some certain steps NOTE: MIGHT WANNA CHANGE THIS FOR PUZZLE
@@ -133,15 +177,23 @@ def search(puzzle, start, end):
     while len(open_list) > 0:
         # Every time any node is referred from open_list, counter of limit operation incremented
         outer_iter += 1
-        print("outer_iter", outer_iter)
+        print("\nouter_iter", outer_iter)
 
         # Get the current node
         current_node = open_list[0]
         current_index = 0
-        print("current node's position: ", current_node.position)
+        #print("current node's position: ", current_node.position)
         print("current node's parent: ", current_node.parent)
         print("current node's h: ", current_node.h)
         print("current node's index: ", current_index)
+        print("current node's coordinates of 0: ", current_node.zero)
+        print("current node's coordinates of 1: ", current_node.one)
+        print("current node's coordinates of 2: ", current_node.two)
+        print("current node's coordinates of 3: ", current_node.three)
+        print("current node's coordinates of 4: ", current_node.four)
+        print("current node's coordinates of 5: ", current_node.five)
+        print("current node's coordinates of 6: ", current_node.six)
+        print("current node's coordinates of 7: ", current_node.seven)
         print("\n")
 
         print("looping through open list")
@@ -182,13 +234,13 @@ def search(puzzle, start, end):
         print("Generating successors..")
         # Generate children from all adjacent squares
         successors = []
-
+        """
         for new_position in move:
 
             # Get node position
-            node_position = (current_node.position[0] + new_position[0], current_node.position[1] + new_position[1])
+            #node_position = (current_node.position[0] + new_position[0], current_node.position[1] + new_position[1])
 
-            # Make sure within range (check if within maze boundary)
+             Make sure within range (check if within maze boundary)
             if (node_position[0] > (no_rows - 1) or
                     node_position[0] < 0 or
                     node_position[1] > (no_columns - 1) or
@@ -200,7 +252,7 @@ def search(puzzle, start, end):
 
             # Append
             successors.append(new_node)
-
+"""
         # Loop through children
         for successor in successors:
 
@@ -256,7 +308,7 @@ if __name__ == '__main__':
 
 
 
-search([4, 2, 3, 1, 5, 6, 7, 0], [1, 7], [0,0])
+search([4, 2, 3, 1, 5, 6, 7, 0])
 
 #create_puzzle = Puzzle([1, 0, 3, 7, 5, 2, 6, 4], 2, 4)  # create object from Puzzle class
 #create_puzzle.show()
