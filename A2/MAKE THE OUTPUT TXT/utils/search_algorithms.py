@@ -2,8 +2,8 @@ from utils.priority_queue import PriorityQueue
 import queue
 
 
-def UCS(initial_state, heuristic):
-    """ UCS search"""
+def UCS(initial_state):
+    """ BFS search"""
     frontier = queue.Queue()
     frontier.put(initial_state)
     frontier_config = {}
@@ -18,7 +18,7 @@ def UCS(initial_state, heuristic):
         state.display()
         explored.add(state.config)
         if state.is_goal():
-            return state, nodes_expanded, max_search_depth
+            return (state, nodes_expanded, max_search_depth)
 
         nodes_expanded += 1
         for neighbor in state.expand(RLDU=False):
@@ -30,8 +30,8 @@ def UCS(initial_state, heuristic):
     return None
 
 
-def GBFS(initial_state, heuristic):
-    """GBFS search"""
+def GBFS(initial_state):
+    """DFS search"""
     frontier = queue.LifoQueue()
     frontier.put(initial_state)
     frontier_config = {}
@@ -46,7 +46,7 @@ def GBFS(initial_state, heuristic):
         state.display()
         explored.add(state.config)
         if state.is_goal():
-            return state, nodes_expanded, max_search_depth
+            return (state, nodes_expanded, max_search_depth)
 
         nodes_expanded += 1
         for neighbor in state.expand():
@@ -74,18 +74,17 @@ def A_STAR(initial_state, heuristic):
         state.display()
         explored.add(state)
         if state.is_goal():
-            return state, nodes_expanded, max_search_depth
+            return (state, nodes_expanded, max_search_depth)
 
         nodes_expanded += 1
-        for neighbor in state.expand(RLDU=False):
-            if neighbor not in explored and tuple(neighbor.config) not in frontier_config:
-                frontier.append(neighbor)
-                frontier_config[tuple(neighbor.config)] = True
-                if neighbor.cost > max_search_depth:
-                    print("hey")
-                    max_search_depth = neighbor.cost
-            elif neighbor in frontier:
-                if heuristic(neighbor) < frontier[neighbor]:
-                    frontier.__delitem__(neighbor)
-                    frontier.append(neighbor)
+        for neigbhor in state.expand(RLDU=False):
+            if neigbhor not in explored and tuple(neigbhor.config) not in frontier_config:
+                frontier.append(neigbhor)
+                frontier_config[tuple(neigbhor.config)] = True
+                if neigbhor.cost > max_search_depth:
+                    max_search_depth = neigbhor.cost
+            elif neigbhor in frontier:
+                if heuristic(neigbhor) < frontier[neigbhor]:
+                    frontier.__delitem__(neigbhor)
+                    frontier.append(neigbhor)
     return None
