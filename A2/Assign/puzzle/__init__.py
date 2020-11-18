@@ -1,0 +1,2 @@
+def puzz():
+    return None
