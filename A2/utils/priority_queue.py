@@ -1,6 +1,5 @@
 import heapq
 
-
 class PriorityQueue:
     """A Queue in which the minimum (or maximum) element (as determined by f and
     order) is returned first.

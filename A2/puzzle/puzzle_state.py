@@ -1,11 +1,13 @@
 class PuzzleState(object):
     """docstring for PuzzleState"""
 
-    def __init__(self, config, n, m, goal, cost_function, parent=None, action="Initial", cost=0):
+    def __init__(self, config, n, m, goal, cost_function, parent=None, action="Initial", cost=0, tile=0, costOfMove=0):
 
         if n * m != len(config):
             raise AttributeError("The length of config entered is not correct or less than required!")
 
+        self.tile = tile
+        self.costOfMove=costOfMove
         self.n = n
         self.m = m
         self.cost = cost  # g cost
@@ -42,7 +44,7 @@ class PuzzleState(object):
             new_config[blank_index], new_config[target] = new_config[target], new_config[blank_index]
             return PuzzleState(tuple(new_config), self.n, self.m, self.goal, self.cost_function, parent=self,
                                action="Wrap_Left",
-                               cost=self.cost + 2)
+                               cost=self.cost + 2, costOfMove=2, tile=self.config[target])
         else:
             blank_index = self.blank_row * self.m + self.blank_col
             target = blank_index - 1
@@ -50,7 +52,7 @@ class PuzzleState(object):
             new_config[blank_index], new_config[target] = new_config[target], new_config[blank_index]
             return PuzzleState(tuple(new_config), self.n, self.m, self.goal, self.cost_function, parent=self,
                                action="Left",
-                               cost=self.cost + 1)
+                               cost=self.cost + 1,costOfMove= 1,tile=self.config[target])
 
     def move_right(self):
         if self.blank_col == self.m - 1:
@@ -60,7 +62,7 @@ class PuzzleState(object):
             new_config[blank_index], new_config[target] = new_config[target], new_config[blank_index]
             return PuzzleState(tuple(new_config), self.n, self.m, self.goal, self.cost_function, parent=self,
                                action="Wrap_Right",
-                               cost=self.cost + 2)
+                               cost=self.cost + 2, costOfMove = 2,tile=self.config[target])
         else:
             blank_index = self.blank_row * self.m + self.blank_col
             target = blank_index + 1
@@ -68,7 +70,7 @@ class PuzzleState(object):
             new_config[blank_index], new_config[target] = new_config[target], new_config[blank_index]
             return PuzzleState(tuple(new_config), self.n, self.m, self.goal, self.cost_function, parent=self,
                                action="Right",
-                               cost=self.cost + 1)
+                               cost=self.cost + 1,costOfMove= 1,tile=self.config[target])
 
     def move_up(self):
         if self.blank_row == 0:
@@ -80,7 +82,7 @@ class PuzzleState(object):
             new_config[blank_index], new_config[target] = new_config[target], new_config[blank_index]
             return PuzzleState(tuple(new_config), self.n, self.m, self.goal, self.cost_function, parent=self,
                                action="Up",
-                               cost=self.cost + 1)
+                               cost=self.cost + 1,costOfMove=1,tile=self.config[target])
 
     def move_down(self):
         if self.blank_row == self.n - 1:
@@ -92,7 +94,7 @@ class PuzzleState(object):
             new_config[blank_index], new_config[target] = new_config[target], new_config[blank_index]
             return PuzzleState(tuple(new_config), self.n, self.m, self.goal, self.cost_function, parent=self,
                                action="Down",
-                               cost=self.cost + 1)
+                               cost=self.cost + 1,costOfMove=1,tile=self.config[target])
 
     def move_diag(self):
         if self.blank_row == 0 and self.blank_col == 0:
@@ -102,7 +104,7 @@ class PuzzleState(object):
             new_config[blank_index], new_config[target] = new_config[target], new_config[blank_index]
             return PuzzleState(tuple(new_config), self.n, self.m, self.goal, self.cost_function, parent=self,
                                action="Down_Right_Diag",
-                               cost=self.cost + 3)
+                               cost=self.cost + 3,costOfMove=3,tile=self.config[target])
         if self.blank_row == 1 and self.blank_col == 0:
             blank_index = self.blank_row * self.m + self.blank_col  # 4
             target = blank_index - self.m + 1  # 1
@@ -110,7 +112,7 @@ class PuzzleState(object):
             new_config[blank_index], new_config[target] = new_config[target], new_config[blank_index]
             return PuzzleState(tuple(new_config), self.n, self.m, self.goal, self.cost_function, parent=self,
                                action="Up_Right_Diag",
-                               cost=self.cost + 3)
+                               cost=self.cost + 3,costOfMove=3,tile=self.config[target])
         if self.blank_row == 0 and self.blank_col == 3:
             blank_index = self.blank_row * self.m + self.blank_col  # 3
             target = blank_index + self.m - 1  # 6
@@ -118,7 +120,7 @@ class PuzzleState(object):
             new_config[blank_index], new_config[target] = new_config[target], new_config[blank_index]
             return PuzzleState(tuple(new_config), self.n, self.m, self.goal, self.cost_function, parent=self,
                                action="Down_Left_Diag",
-                               cost=self.cost + 3)
+                               cost=self.cost + 3,costOfMove=3,tile=self.config[target])
         if self.blank_row == 1 and self.blank_col == 3:
             blank_index = self.blank_row * self.m + self.blank_col  # 7
             target = blank_index - self.m - 1  # 2
@@ -126,7 +128,7 @@ class PuzzleState(object):
             new_config[blank_index], new_config[target] = new_config[target], new_config[blank_index]
             return PuzzleState(tuple(new_config), self.n, self.m, self.goal, self.cost_function, parent=self,
                                action="Up_Left_Diag",
-                               cost=self.cost + 3)
+                               cost=self.cost + 3,costOfMove=3,tile=self.config[target])
         if self.blank_row == 0 and self.blank_col == 0:
             blank_index = self.blank_row * self.m + self.blank_col  # 0
             target = blank_index + 2 * self.m - 1  # 7
@@ -134,7 +136,7 @@ class PuzzleState(object):
             new_config[blank_index], new_config[target] = new_config[target], new_config[blank_index]
             return PuzzleState(tuple(new_config), self.n, self.m, self.goal, self.cost_function, parent=self,
                                action="Top_Left_Corner_Opposed_Diag",
-                               cost=self.cost + 3)
+                               cost=self.cost + 3,costOfMove=3,tile=self.config[target])
         if self.blank_row == 1 and self.blank_col == 0:
             blank_index = self.blank_row * self.m + self.blank_col  # 4
             target = blank_index - 1  # 3
@@ -142,7 +144,7 @@ class PuzzleState(object):
             new_config[blank_index], new_config[target] = new_config[target], new_config[blank_index]
             return PuzzleState(tuple(new_config), self.n, self.m, self.goal, self.cost_function, parent=self,
                                action="Bottom_Left_Corner_Opposed_Diag",
-                               cost=self.cost + 3)
+                               cost=self.cost + 3,costOfMove=3,tile=self.config[target])
         if self.blank_row == 0 and self.blank_col == 3:
             blank_index = self.blank_row * self.m + self.blank_col  # 3
             target = blank_index + 1  # 4
@@ -150,7 +152,7 @@ class PuzzleState(object):
             new_config[blank_index], new_config[target] = new_config[target], new_config[blank_index]
             return PuzzleState(tuple(new_config), self.n, self.m, self.goal, self.cost_function, parent=self,
                                action="Top_Right_Corner_Opposed_Diag",
-                               cost=self.cost + 3)
+                               cost=self.cost + 3,costOfMove=3,tile=self.config[target])
         if self.blank_row == 1 and self.blank_col == 3:
             blank_index = self.blank_row * self.m + self.blank_col  # 7
             target = blank_index - 2 * self.m + 1  # 0
@@ -158,29 +160,12 @@ class PuzzleState(object):
             new_config[blank_index], new_config[target] = new_config[target], new_config[blank_index]
             return PuzzleState(tuple(new_config), self.n, self.m, self.goal, self.cost_function, parent=self,
                                action="Bottom_Right_Corner_Opposed_Diag",
-                               cost=self.cost + 3)
+                               cost=self.cost + 3,costOfMove=3,tile=self.config[target])
 
     def expand(self, RLDU=True):
         """expand the node"""
         global UP, UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT, LEFT, UP_LEFT
         if len(self.children) == 0:
-            # if self.blank_row - 1 >= 0:  # check if blank tile is in borders but not corners
-            #     return
-            # if self.blank_row - 1 >= 0 and self.blank_col + 1 <= 3:
-            #     return
-            # if self.blank_col + 1 <= 3:
-            #     return
-            # if self.blank_row + 1 <= 2 and self.blank_col + 1 <= 3:
-            #     return
-            # if self.blank_row + 1 <= 2:
-            #     return
-            # if self.blank_row + 1 <= 2 and self.blank_col - 1 >= 0:
-            #     return
-            # if self.blank_col - 1 >= 0:
-            #     return
-            # if self.blank_row - 1 >= 0 and self.blank_col - 1 >= 0:
-            #     return
-
             if RLDU:  # RLDU Diag
                 right_child = self.move_right()
                 if right_child is not None:

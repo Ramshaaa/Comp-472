@@ -6,7 +6,7 @@ if __name__ == '__main__':
     chosen_algorithm = sys.argv[1].lower()
     begin_state = sys.argv[2].split(",")
     print(begin_state)
-    if chosen_algorithm == 'ast' or chosen_algorithm == 'gbfs':
+    if chosen_algorithm == 'ast' or chosen_algorithm == 'gbfs' or chosen_algorithm == 'ucs':
         value = input("Please choose a heuristic function:\n[1] Manhattan Distance  [2] Euclidean Distance  ")
         if value == str(1):
             chosen_heuristic = "manhattan"
