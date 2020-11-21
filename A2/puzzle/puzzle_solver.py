@@ -7,10 +7,10 @@ import os
 
 class PuzzleSolver(object):
 
-    def __init__(self, initial_state, goal, algorithm='ucs', heuristic=None):
+    def __init__(self, initial_state, goal1, goal2, algorithm='ucs', heuristic=None):
 
         self.algorithm = algorithm
-        self.heur = heuristic
+        self.heur = 0
         self.initial_state = initial_state
 
         # Assign the search algorithm that will be used in the solver.
@@ -25,12 +25,14 @@ class PuzzleSolver(object):
 
         if heuristic == 'manhattan':
             self.dist_metric = manhattan_distance
+            self.heur = 1
         elif heuristic == 'euclidean':
             self.dist_metric = euclidean_distance
+            self.heur = 2
 
         # Create a Puzzle State Object with the inputs for Solver.
         initial_state = tuple(map(int, initial_state))
-        self.puzzle_state = PuzzleState(initial_state, 2, 4, goal, self.calculate_total_cost)
+        self.puzzle_state = PuzzleState(initial_state, 2, 4, goal1, goal2, self.calculate_total_cost)
 
     def calculate_total_cost(self, state):
         """calculate the total estimated cost of a state"""
@@ -38,7 +40,7 @@ class PuzzleSolver(object):
         for i, item in enumerate(state.config):
             current_row = i // state.m
             current_col = i % state.m
-            goal_idx = state.goal.index(item)
+            goal_idx = state.goal1.index(item)
             goal_row = goal_idx // state.m
             goal_col = goal_idx % state.m
             sum_heuristic += self.dist_metric(current_row, current_col, goal_row, goal_col)
@@ -46,29 +48,60 @@ class PuzzleSolver(object):
             return state.cost
         elif self.algorithm == 'gbfs':
             return sum_heuristic
-        else :
+        else:
+            return state.cost + sum_heuristic
+
+    def calculate_total_cost_demo(self, state):
+        """calculate the total estimated cost of a state"""
+        sum_heuristic = 0
+        for i, item in enumerate(state.config):
+            goal_idx = state.goal1.index(item)
+            goal_row = goal_idx // state.m
+            goal_col = goal_idx % state.m
+            if goal_row == 0 and goal_col == 0:
+                sum_heuristic = 0
+
+        if self.algorithm == 'ucs':
+            return state.cost
+        elif self.algorithm == 'gbfs':
+            return sum_heuristic
+        else:
             return state.cost + sum_heuristic
 
     def printSolutionFile(self, state_list, costofpath, runningtime, initial):
-        #change the name here
-        name = '2_ASTAR_solution.txt'
+        # change the name here
+        name = str(self.heur) + '_' + self.algorithm + '_solution.txt'
 
-        with open(os.path.join(name), 'w') as f:
+        with open(os.path.join(name), 'a') as f:
             f.write('0 0' + ' ' + str(initial)[1:-1] + '\n')
+
             for i in state_list:
                 f.write(str(i.tile) + ' ' + str(i.costOfMove) + ' ' + str(i.config)[1:-1] + '\n')
             f.write(str(costofpath) + ' ' + str(runningtime))
+
+            f.write('\n')
         f.close()
 
     def printSearchFile(self, explored):
-        #change the name here
-        name = '2_ASTAR_search.txt'
+        # change the name here
+        name = str(self.heur) + '_' + self.algorithm + '_solution.txt'
         with open(os.path.join(name), 'w') as f:
             for i in explored:
                 f.write(str(i.cost) + ' ' + str(i.config)[1:-1] + '\n')
         f.close()
 
+    def printAnalysis(self, costofpath, runningtime, state_list, avgcost=0, avgtime=0):
+
+        name = str(self.heur) + '_' + self.algorithm + '_solution.txt'
+        with open(os.path.join(name), 'w') as f:
+            for i in state_list:
+                avgcost += i.cost
+                avgtime += runningtime
+            f.write('Total Cost: ' + str(avgcost) + '\nAverage Cost: ' + str(avgcost / 50)
+                    + '\nTotal Runtime: ' + str(avgtime) + '\nAverage Runtime: ' + str(avgtime / 50))
+
     def writeOutput(self, result, running_time):
+
         final_state, nodes_expanded, max_search_depth, search = result
         path_to_goal = [final_state.action]
         cost_of_path = final_state.cost
@@ -93,6 +126,7 @@ class PuzzleSolver(object):
         print("running_time: " + str(running_time) + "\n")
         self.printSolutionFile(state_list, cost_of_path, running_time, self.initial_state)
         self.printSearchFile(search)
+        self.printAnalysis(cost_of_path, running_time, state_list)
 
     def solve(self):
         start_time = time.time()
