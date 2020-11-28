@@ -23,16 +23,16 @@ def UCS(initial_state, heuristic):
             return state, nodes_expanded, max_search_depth, search_path
 
         nodes_expanded += 1
-        for neigbhor in state.expand(RLDU=False):
-            if neigbhor not in explored and tuple(neigbhor.config) not in frontier_config:
-                frontier.append(neigbhor)
-                frontier_config[tuple(neigbhor.config)] = True
-                if neigbhor.cost > max_search_depth:
-                    max_search_depth = neigbhor.cost
-            elif neigbhor in frontier:
-                if heuristic(neigbhor) < frontier[neigbhor]:
-                    frontier.__delitem__(neigbhor)
-                    frontier.append(neigbhor)
+        for neighbor in state.expand():
+            if neighbor not in explored and tuple(neighbor.config) not in frontier_config:
+                frontier.append(neighbor)
+                frontier_config[tuple(neighbor.config)] = True
+                if neighbor.cost > max_search_depth:
+                    max_search_depth = neighbor.cost
+            elif neighbor in frontier:
+                if heuristic(neighbor) < frontier[neighbor]:
+                    frontier.__delitem__(neighbor)
+                    frontier.append(neighbor)
     return None
 
 
@@ -57,16 +57,16 @@ def GBFS(initial_state, heuristic):
             return state, nodes_expanded, max_search_depth, search_path
 
         nodes_expanded += 1
-        for neigbhor in state.expand(RLDU=False):
-            if neigbhor not in explored and tuple(neigbhor.config) not in frontier_config:
-                frontier.append(neigbhor)
-                frontier_config[tuple(neigbhor.config)] = True
-                if neigbhor.cost > max_search_depth:
-                    max_search_depth = neigbhor.cost
-            elif neigbhor in frontier:
-                if heuristic(neigbhor) < frontier[neigbhor]:
-                    frontier.__delitem__(neigbhor)
-                    frontier.append(neigbhor)
+        for neighbor in state.expand():
+            if neighbor not in explored and tuple(neighbor.config) not in frontier_config:
+                frontier.append(neighbor)
+                frontier_config[tuple(neighbor.config)] = True
+                if neighbor.cost > max_search_depth:
+                    max_search_depth = neighbor.cost
+            elif neighbor in frontier:
+                if heuristic(neighbor) < frontier[neighbor]:
+                    frontier.__delitem__(neighbor)
+                    frontier.append(neighbor)
     return None
 
 
@@ -91,14 +91,14 @@ def A_STAR(initial_state, heuristic):
             return state, nodes_expanded, max_search_depth, search_path
 
         nodes_expanded += 1
-        for neigbhor in state.expand(RLDU=False):
-            if neigbhor not in explored and tuple(neigbhor.config) not in frontier_config:
-                frontier.append(neigbhor)
-                frontier_config[tuple(neigbhor.config)] = True
-                if neigbhor.cost > max_search_depth:
-                    max_search_depth = neigbhor.cost
-            elif neigbhor in frontier:
-                if heuristic(neigbhor) < frontier[neigbhor]:
-                    frontier.__delitem__(neigbhor)
-                    frontier.append(neigbhor)
+        for neighbor in state.expand():
+            if neighbor not in explored and tuple(neighbor.config) not in frontier_config:
+                frontier.append(neighbor)
+                frontier_config[tuple(neighbor.config)] = True
+                if neighbor.cost > max_search_depth:
+                    max_search_depth = neighbor.cost
+            elif neighbor in frontier:
+                if heuristic(neighbor) < frontier[neighbor]:
+                    frontier.__delitem__(neighbor)
+                    frontier.append(neighbor)
     return None

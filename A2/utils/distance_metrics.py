@@ -9,3 +9,8 @@ def manhattan_distance(point1_x, point1_y, point2_x, point2_y):
 
 def euclidean_distance(point1_x, point1_y, point2_x, point2_y):
     return math.sqrt(math.pow(point1_x - point2_x, 2) + math.pow(point1_y - point2_y, 2))
+
+
+def no_heuristic(point1_x, point1_y, point2_x, point2_y):
+    return 0
+
